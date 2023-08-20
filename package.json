@@ -19,7 +19,8 @@
     "dotenv": "^16.3.1",
     "googleapis": "^126.0.0",
     "utf-8-validate": "^6.0.3",
-    "zlib-sync": "^0.1.8"
+    "zlib-sync": "^0.1.8",
+    "luxon": "^3.4.0"
   },
   "scripts": {
     "run": "node index.js",
@@ -27,7 +28,6 @@
     "dev": "node deploy.js && node index.js"
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.1",
-    "luxon": "^3.4.0"
+    "@types/luxon": "^3.3.1"
   }
 }
