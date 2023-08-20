@@ -2,6 +2,7 @@ import {Client, Events} from 'discord.js'
 import {config} from 'dotenv'
 import {GatewayIntentBits} from 'discord-api-types/v10'
 import Commands from './commands.js'
+import {loadSavedCredentialsIfExist} from './commands/newhuntdocs.js'
 
 config()
 const client = new Client({intents: [GatewayIntentBits.Guilds]})

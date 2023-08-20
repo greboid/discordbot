@@ -11,6 +11,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@google-cloud/local-auth": "^3.0.0",
+    "@googleapis/drive": "^8.2.0",
     "bufferutil": "^4.0.7",
     "discord-api-types": "^0.37.54",
     "discord.js": "^14.13.0",
@@ -23,5 +25,9 @@
     "run": "node index.js",
     "deploy": "node deploy.js",
     "dev": "node deploy.js && node index.js"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.3.1",
+    "luxon": "^3.4.0"
   }
 }
