@@ -6,15 +6,15 @@ WORKDIR /app
 
 COPY package-lock.json package.json /app/
 
-RUN npm install
+RUN npm install --omit=dev
 
 FROM alpine:3.18
 
-RUN apk add nodejs npm
+RUN apk --no-cache add nodejs npm
 
 WORKDIR /app
 
 COPY --from=build /app/node_modules/ /app/node_modules/
 COPY . /app
 
-ENTRYPOINT ["npm", "run", "dev"]
+ENTRYPOINT ["node", "index.js"]
