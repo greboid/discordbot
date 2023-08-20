@@ -1,0 +1,12 @@
+name: build
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+jobs:
+  container:
+    uses: greboid/.github/.github/workflows/docker.yml@master
+    secrets: inherit
+    needs: [test]
