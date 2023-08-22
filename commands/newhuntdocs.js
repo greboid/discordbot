@@ -23,10 +23,10 @@ export default class NewHuntDocs {
           setDescription('The name of the new hunt being started').
           setRequired(true))
   execute = async (interaction) => {
-    await interaction.reply({content: 'Creating docs, bear with me', ephemeral: true})
+    await interaction.respond({content: 'Creating docs, bear with me', ephemeral: true})
     const huntName = interaction.options.getString('name')
     if (!huntName) {
-      await interaction.editReply('Name not provided')
+      await interaction.respond('Name not provided')
       return
     }
     let client = await this.createDriveClient()
@@ -43,7 +43,7 @@ export default class NewHuntDocs {
       return null
     })
     if (!folderID) {
-      await interaction.editReply('Error creating folder')
+      await interaction.respond('Error creating folder')
       return
     }
     let fileID = await client.files.copy({
@@ -59,7 +59,7 @@ export default class NewHuntDocs {
       return null
     })
     if (!fileID) {
-      await interaction.editReply('Error creating spreadsheet')
+      await interaction.respond('Error creating spreadsheet')
       return
     }
     fileID = await client.files.create({
@@ -75,7 +75,7 @@ export default class NewHuntDocs {
       return null
     })
     if (!fileID) {
-      await interaction.editReply('Error creating jamboard')
+      await interaction.respond('Error creating jamboard')
       return
     }
     let files = await client.files.list({
@@ -86,6 +86,6 @@ export default class NewHuntDocs {
     let urls = files.data.files.map(value => {
       return value.webViewLink
     })
-    await interaction.followUp({content: `Hunt files created ${urls.join(', ')}`, ephemeral: false})
+    await interaction.respond({content: `Hunt files created ${urls.join(', ')}`, ephemeral: false})
   }
 }

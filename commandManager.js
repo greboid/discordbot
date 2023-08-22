@@ -1,8 +1,8 @@
-import {Collection, CommandInteraction} from 'discord.js'
+import {Collection, CommandInteraction, REST, Routes} from 'discord.js'
 import {readdirSync} from 'fs'
 import {BotApplicationCommand} from './BotApplicationCommand.js'
 
-export class Commands {
+export class CommandManager {
 
   /**
    * @type {Map<string, BotApplicationCommand>}
@@ -17,7 +17,7 @@ export class Commands {
     return new factoryFunction()
   }
 
-  async init() {
+  async init(client) {
     const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'))
     for (const file of commandFiles) {
       let {default: module} = await import(`./commands/${file}`)
@@ -33,6 +33,7 @@ export class Commands {
         command.data.aliases.forEach(alias => this.commands.set(alias.toLowerCase(), command))
       }
     }
+    await this.deployCommands(client)
     return this
   }
 
@@ -84,5 +85,14 @@ export class Commands {
         await interaction.reply({content: 'Oops, I forgot to reply, sorry.', ephemeral: true})
       }
     }
+  }
+
+  async deployCommands(client) {
+    const rest = new REST()
+    rest.setToken(process.env.DISCORD_TOKEN)
+    const apiPath = Routes.applicationGuildCommands(process.env.DISCORD_CLIENT, process.env.DISCORD_SERVER)
+    await rest.put(apiPath, {body: client.commands.commands.mapValues(value => value.data.toJSON())}).
+        then(response => console.log(`Loaded: ${response.length} command(s)`)).
+        catch(error => console.error(`Error loading: ${error}`))
   }
 }
