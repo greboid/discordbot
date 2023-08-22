@@ -1,4 +1,4 @@
-import {BotEvent} from '../botEvent.js'
+import {BotEvent} from '../lib/botEvent.js'
 import {Events} from 'discord.js'
 
 export default class ClientReady extends BotEvent {

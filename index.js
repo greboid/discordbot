@@ -1,8 +1,8 @@
-import {BotClient} from './client.js'
+import {BotClient} from './lib/client.js'
 import {config} from 'dotenv'
 import {GatewayIntentBits} from 'discord-api-types/v10'
-import {CommandManager} from './commandManager.js'
-import {EventManager} from './eventManager.js'
+import {CommandManager} from './lib/commandManager.js'
+import {EventManager} from './lib/eventManager.js'
 
 config()
 
