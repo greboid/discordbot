@@ -1,6 +1,6 @@
 import {Collection, CommandInteraction, REST, Routes} from 'discord.js'
 import {readdirSync} from 'fs'
-import {BotApplicationCommand} from './BotApplicationCommand.js'
+import {BotApplicationCommand} from './botApplicationCommand.js'
 
 export class CommandManager {
 
