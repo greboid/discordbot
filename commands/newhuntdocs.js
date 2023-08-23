@@ -1,21 +1,7 @@
 import {SlashCommandBuilder} from 'discord.js'
-import {DateTime} from 'luxon'
-import {google} from 'googleapis'
-import {drive} from '@googleapis/drive'
-import {join, resolve} from 'path'
+import {createHuntFilesAndGetLink} from '../lib/googledocs.js'
 
 export default class NewHuntDocs {
-  createDriveClient = () => {
-    const auth = new google.auth.GoogleAuth({
-      keyFile: join(resolve(''), 'google.json'),
-      scopes: [
-        'https://www.googleapis.com/auth/drive',
-        'https://www.googleapis.com/auth/drive.appdata',
-        'https://www.googleapis.com/auth/drive.file',
-      ],
-    })
-    return drive({version: 'v3', auth})
-  }
   data = new SlashCommandBuilder().setName('newhuntdocs').
       setDescription('Creates a new set of puzzle hunt documents in google drive').
       addStringOption(option => option.
@@ -23,69 +9,18 @@ export default class NewHuntDocs {
           setDescription('The name of the new hunt being started').
           setRequired(true))
   execute = async (interaction) => {
+    //TODO some kind of permissions check....
     await interaction.respond({content: 'Creating docs, bear with me', ephemeral: true})
-    const huntName = interaction.options.getString('name')
-    if (!huntName) {
-      await interaction.respond('Name not provided')
-      return
+    try {
+      const huntName = interaction.options.getString('name')
+      let urls = await createHuntFilesAndGetLink(process.env.DRIVE_PARENT_FOLDER, process.env.DRIVE_TEMPLATE_DOC,
+          huntName)
+      const jamboard = urls.find(value => value.includes('jamboard.google.com'))
+      const sheet = urls.find(value => value.includes('docs.google.com'))
+      await interaction.respond(
+          {content: `Hunt files created [Sheet](${sheet}) [Jamboard](${jamboard})`, ephemeral: false})
+    } catch (error) {
+      interaction.respond({content: `Unable to create docs: ${error}`})
     }
-    let client = await this.createDriveClient()
-    let folderID = await client.files.create({
-      requestBody: {
-        name: `${DateTime.now().toFormat('yyyy-LL')}-${huntName}`,
-        mimeType: 'application/vnd.google-apps.folder',
-        parents: [process.env.DRIVE_PARENT_FOLDER],
-      },
-    }).then(resp => {
-      return resp.data.id
-    }).catch(error => {
-      console.error(error)
-      return null
-    })
-    if (!folderID) {
-      await interaction.respond('Error creating folder')
-      return
-    }
-    let fileID = await client.files.copy({
-      fileId: process.env.DRIVE_TEMPLATE_DOC,
-      requestBody: {
-        name: huntName,
-        parents: [folderID],
-      },
-    }).then(resp => {
-      return resp.data.id
-    }).catch(error => {
-      console.log(error)
-      return null
-    })
-    if (!fileID) {
-      await interaction.respond('Error creating spreadsheet')
-      return
-    }
-    fileID = await client.files.create({
-      requestBody: {
-        name: huntName,
-        mimeType: 'application/vnd.google-apps.jam',
-        parents: [folderID],
-      },
-    }).then(resp => {
-      return resp.data.id
-    }).catch(error => {
-      console.log(error)
-      return null
-    })
-    if (!fileID) {
-      await interaction.respond('Error creating jamboard')
-      return
-    }
-    let files = await client.files.list({
-      q: `'${folderID}' in parents`,
-      fields: 'files/webViewLink',
-
-    })
-    let urls = files.data.files.map(value => {
-      return value.webViewLink
-    })
-    await interaction.respond({content: `Hunt files created ${urls.join(', ')}`, ephemeral: false})
   }
 }
