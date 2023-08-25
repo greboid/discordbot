@@ -2,3 +2,4 @@
 /.env
 /.idea
 /google.json
+/db.sqlite3
