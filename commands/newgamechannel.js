@@ -1,7 +1,6 @@
 import {
   ChannelType,
-  PermissionFlagsBits, PermissionOverwriteManager,
-  PermissionOverwrites,
+  PermissionFlagsBits,
   PermissionsBitField,
   SlashCommandBuilder,
 } from 'discord.js'
