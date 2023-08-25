@@ -25,9 +25,7 @@
     "zlib-sync": "^0.1.8"
   },
   "scripts": {
-    "run": "node index.js",
-    "deploy": "node deploy.js",
-    "dev": "node deploy.js && node index.js"
+    "run": "node index.js"
   },
   "devDependencies": {
     "@types/luxon": "^3.3.1"
