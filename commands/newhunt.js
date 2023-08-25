@@ -51,10 +51,8 @@ export default class NewHuntDocs {
 }
 
 const createDocs = async (huntName) => {
-  let urls = await createHuntFilesAndGetLink(process.env.DRIVE_PARENT_FOLDER,
+  const [sheet, jamboard] = await createHuntFilesAndGetLink(process.env.DRIVE_PARENT_FOLDER,
       process.env.DRIVE_TEMPLATE_DOC, huntName)
-  const jamboard = urls.find(value => value.includes('jamboard.google.com'))
-  const sheet = urls.find(value => value.includes('docs.google.com'))
   return new EmbedBuilder().
       setTitle('Hunt docs').
       setDescription(` - [Sheet](${sheet}})\n- [Jamboard](${jamboard})`).
