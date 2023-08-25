@@ -1,4 +1,4 @@
-import {channelMention, ChannelType, EmbedBuilder, SlashCommandBuilder, userMention} from 'discord.js'
+import {ChannelType, EmbedBuilder, SlashCommandBuilder, userMention} from 'discord.js'
 import {createHuntFilesAndGetLink} from '../lib/googledocs.js'
 import {logger} from '../lib/logger.js'
 
@@ -30,10 +30,8 @@ export default class NewHuntDocs {
       await interaction.respond({content: 'This must be a text based channel', ephemeral: true})
     }
     const huntName = interaction.options.getString('name')
-    /** @type {GuildTextBasedChannmel} */
-    const channel = interaction.channel
     try {
-      let thread = await channel.threads.create({
+      let thread = await interaction.channel.threads.create({
         name: huntName,
         type: ChannelType.PrivateThread,
       })
@@ -45,7 +43,8 @@ export default class NewHuntDocs {
       msg.pin()
       await thread.send({content: `${userMention(process.env.PUZZLES_BOT)} - You're needed in here please!`})
     } catch (error) {
-      interaction.respond({content: `Unable to create docs: ${error}`})
+      interaction.respond({content: `Unable to create docs`})
+      logger.error(`Unable to create hunt docs ${error}`)
     }
   }
 }
