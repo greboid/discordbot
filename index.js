@@ -7,7 +7,9 @@ import {logger} from './lib/logger.js'
 
 config()
 
-const client = new BotClient({intents: [GatewayIntentBits.Guilds | GatewayIntentBits.GuildMessages | GatewayIntentBits.GuildMembers]})
+const client = new BotClient({
+  intents: [GatewayIntentBits.Guilds | GatewayIntentBits.GuildMessages | GatewayIntentBits.GuildMembers],
+})
 client.init(process.env.DB_PATH)
 
 client.commands = new CommandManager()

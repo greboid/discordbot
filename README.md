@@ -30,3 +30,6 @@
 |                      |                                   |
 | **Log role changes** | **Description**                   |
 | LOG_CHANNEL          | Log channel snowflake             |
+|                      |                                   |
+| **Event Management** | **Description**                   |
+| EVENTS_CHANNEL       | Events channel snowflake          |
