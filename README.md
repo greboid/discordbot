@@ -16,6 +16,7 @@
 | DISCORD_TOKEN        | Bot Token                         |
 | DISCORD_CLIENT       | Bot client ID                     |
 | DB_PATH              | File path for the sqlite database |
+| SESSION_SECRET       | Session secret                    |
 |                      |                                   |
 | **Game Channels**    | **Description**                   |
 |                      |                                   |

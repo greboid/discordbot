@@ -1,0 +1,13 @@
+<div>
+  {{#if servers}}
+    <ul>
+    {{#each servers}}
+      {{#with this}}
+        <li><a href="/server/{{id}}">{{name}}</a></li>
+      {{/with}}
+    {{/each}}
+    </ul>
+  {{else}}
+    <p>No Servers</p>
+  {{/if}}
+</div>

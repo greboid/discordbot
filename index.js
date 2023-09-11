@@ -1,10 +1,10 @@
-import {Events} from 'discord.js'
 import {BotClient} from './lib/client.js'
 import {config} from 'dotenv'
 import {GatewayIntentBits} from 'discord-api-types/v10'
 import {CommandManager} from './lib/commandManager.js'
 import {EventManager} from './lib/eventManager.js'
 import {logger} from './lib/logger.js'
+import {setupWeb} from './lib/web.js'
 
 config()
 
@@ -17,5 +17,7 @@ client.commands = new CommandManager()
 client.events = new EventManager()
 await client.commands.init(client)
 await client.events.init(client)
+
+setupWeb(client)
 
 client.login(process.env.DISCORD_TOKEN).catch(error => logger.error(`Error logging in ${error}`))
