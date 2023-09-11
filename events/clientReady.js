@@ -6,7 +6,10 @@ export default class ClientReady extends BotEvent {
   data = {
     type: [Events.ClientReady]
   }
-  execute = (client, ... args) => {
+  execute = async (client, ... args) => {
+    for (const guild of Array.from(await client.guilds.cache.values())) {
+      await client.commands.deployCommands(client, guild)
+    }
     logger.info(`Connected to Discord`)
   }
 }
