@@ -14,7 +14,6 @@
 | **Base Settings**    | **Description**                   |
 |----------------------|-----------------------------------|
 | DISCORD_TOKEN        | Bot Token                         |
-| DISCORD_SERVER       | Discord server ID                 |
 | DISCORD_CLIENT       | Bot client ID                     |
 | DB_PATH              | File path for the sqlite database |
 |                      |                                   |

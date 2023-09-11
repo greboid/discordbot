@@ -1,3 +1,4 @@
+import {Events} from 'discord.js'
 import {BotClient} from './lib/client.js'
 import {config} from 'dotenv'
 import {GatewayIntentBits} from 'discord-api-types/v10'
@@ -16,5 +17,13 @@ client.commands = new CommandManager()
 client.events = new EventManager()
 await client.commands.init(client)
 await client.events.init(client)
+
+client.once(Events.ClientReady, async client => {
+  for (const guild of Array.from(await client.guilds.cache.values())) {
+    await client.commands.deployCommands(client, guild)
+    let onboarding =  await client.rest.get(`/guilds/${guild.id}/onboarding`)
+    logger.debug(`Guild: ${onboarding.guild_id} - ${onboarding.enabled}`)
+  }
+})
 
 client.login(process.env.DISCORD_TOKEN).catch(error => logger.error(`Error logging in ${error}`))
