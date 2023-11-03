@@ -27,7 +27,7 @@ export default class NewGameChannel {
       await interaction.respond({content: 'Creating game channel, bear with me', ephemeral: true})
       const gameName = interaction.options.getString('name')
       let role = await getOrCreateRole(interaction.guild, gameName)
-      if (role) {
+      if (!role) {
         await interaction.respond(`Can't find or create role, stopping`)
         return
       }
