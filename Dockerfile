@@ -1,4 +1,4 @@
-FROM alpine:3.18 as build
+FROM alpine:3.19 as build
 
 RUN apk add nodejs npm python3 make gcc g++ musl-dev
 
@@ -8,7 +8,7 @@ COPY package-lock.json package.json /app/
 
 RUN npm install --omit=dev
 
-FROM alpine:3.18
+FROM alpine:3.19
 
 RUN apk --no-cache add nodejs npm
 
