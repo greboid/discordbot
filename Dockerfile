@@ -1,6 +1,6 @@
 FROM alpine:3.20 as build
 
-RUN apk add nodejs npm python3 make gcc g++ musl-dev
+RUN apk add nodejs npm python3 py3-setuptools make gcc g++ musl-dev
 
 WORKDIR /app
 
