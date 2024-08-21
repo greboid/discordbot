@@ -25,7 +25,7 @@
     "googleapis": "^142.0.0",
     "hbs": "^4.2.0",
     "http-errors": "^2.0.0",
-    "keyv": "^4.5.3",
+    "keyv": "^5.0.0",
     "luxon": "^3.4.0",
     "passport": "^0.7.0",
     "passport-discord": "^0.1.4",
