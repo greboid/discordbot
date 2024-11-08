@@ -30,7 +30,7 @@
     "passport": "^0.7.0",
     "passport-discord": "^0.1.4",
     "pino": "^9.0.0",
-    "pino-pretty": "^11.0.0",
+    "pino-pretty": "^12.0.0",
     "utf-8-validate": "^6.0.3",
     "zlib-sync": "^0.1.8"
   },
