@@ -1,4 +1,4 @@
-FROM alpine:3.21 AS build
+FROM alpine:3.22 AS build
 
 RUN apk add nodejs npm python3 py3-setuptools make gcc g++ musl-dev
 
@@ -8,7 +8,7 @@ COPY package-lock.json package.json /app/
 
 RUN npm install --omit=dev
 
-FROM alpine:3.21
+FROM alpine:3.22
 
 RUN apk --no-cache add nodejs npm
 
