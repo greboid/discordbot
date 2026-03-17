@@ -1,16 +1,16 @@
-FROM alpine:3.23 AS build
+FROM oven/bun:1.3.10-alpine AS build
 
 RUN apk add nodejs npm python3 py3-setuptools make gcc g++ musl-dev
 
 WORKDIR /app
 
-COPY package-lock.json package.json /app/
+COPY bun.lock package.json /app/
 
-RUN npm install --omit=dev
+RUN bun install --omit=dev
 
 FROM alpine:3.23
 
-RUN apk --no-cache add nodejs npm
+RUN apk --no-cache add nodejs
 
 WORKDIR /app
 
