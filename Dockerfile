@@ -1,4 +1,4 @@
-FROM oven/bun:1.3.10-alpine AS build
+FROM oven/bun:1.3.11-alpine AS build
 
 RUN apk add nodejs npm python3 py3-setuptools make gcc g++ musl-dev
 
