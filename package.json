@@ -22,7 +22,7 @@
     "express": "^5.2.1",
     "express-handlebars": "^9.0.0",
     "express-session": "^1.19.0",
-    "googleapis": "^171.4.0",
+    "googleapis": "^173.0.0",
     "hbs": "^4.2.0",
     "http-errors": "^2.0.1",
     "keyv": "^5.6.0",
