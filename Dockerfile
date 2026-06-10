@@ -8,7 +8,7 @@ COPY bun.lock package.json /app/
 
 RUN bun install --omit=dev
 
-FROM alpine:3.23
+FROM alpine:3.24
 
 RUN apk --no-cache add nodejs
 
