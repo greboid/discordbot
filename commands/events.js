@@ -1,9 +1,11 @@
-import {SlashCommandBuilder} from 'discord.js'
+import {InteractionContextType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder} from 'discord.js'
 
-export default class NewGameChannel {
+export default class EventsCommand {
   data = new SlashCommandBuilder()
       .setName('events')
       .setDescription('Manage events')
+      .setDefaultMemberPermissions(PermissionFlagsBits.ManageEvents)
+      .setContexts(InteractionContextType.Guild)
       .addSubcommand(subCommand =>
                          subCommand.setName('create')
                                    .setDescription('Creates a new event')
@@ -20,17 +22,18 @@ export default class NewGameChannel {
       )
 
   /**
-   * @param client {import('./client.js').BotClient}
+   * @param client {import('../lib/client.js').BotClient}
    * @param interaction {import('discord.js').ChatInputCommandInteraction}
    * @return {Promise<void>}
    */
   execute = async (client, interaction) => {
+    await interaction.deferReply({flags: MessageFlags.Ephemeral})
     switch (interaction.options.getSubcommand()) {
       case 'create':
-        interaction.respond({content: `This would create: ${interaction.options.getString('name')}`, ephemeral: true})
+        await interaction.editReply({content: `This would create: ${interaction.options.getString('name')}`})
         break
       case 'list':
-        interaction.respond({content: `Some events would be listed`, ephemeral: true})
+        await interaction.editReply({content: 'Some events would be listed'})
         break
     }
   }

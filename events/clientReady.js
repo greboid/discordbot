@@ -4,12 +4,13 @@ import {logger} from '../lib/logger.js'
 
 export default class ClientReady extends BotEvent {
   data = {
-    type: [Events.ClientReady]
+    type: [Events.ClientReady],
+    once: true,
   }
-  execute = async (client, ... args) => {
-    for (const guild of Array.from(await client.guilds.cache.values())) {
+  execute = async (client) => {
+    for (const guild of client.guilds.cache.values()) {
       await client.commands.deployCommands(client, guild)
     }
-    logger.info(`Connected to Discord`)
+    logger.info('Connected to Discord')
   }
 }

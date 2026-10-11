@@ -1,7 +1,7 @@
 import {Events} from 'discord.js'
 import {BotEvent} from '../lib/botEvent.js'
 
-export default class InteractionCreate extends BotEvent {
+export default class GuildCreated extends BotEvent {
   data = {
     type: [Events.GuildCreate]
   }

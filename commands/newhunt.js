@@ -1,4 +1,11 @@
-import {ChannelType, EmbedBuilder, SlashCommandBuilder, userMention} from 'discord.js'
+import {
+  ChannelType,
+  EmbedBuilder,
+  InteractionContextType,
+  MessageFlags,
+  SlashCommandBuilder,
+  userMention,
+} from 'discord.js'
 import {createHuntFilesAndGetLink} from '../lib/googledocs.js'
 import {logger} from '../lib/logger.js'
 
@@ -14,47 +21,54 @@ export default class NewHuntDocs {
       addStringOption(option => option.
           setName('name').
           setDescription('The name of the new hunt being started').
-          setRequired(true))
+          setRequired(true)).
+      setContexts(InteractionContextType.Guild)
 
   /**
-   * @param client {import('./client.js').BotClient}
+   * @param client {import('../lib/client.js').BotClient}
    * @param interaction {ChatInputCommandInteraction}
    * @return {Promise<void>}
    */
   execute = async (client, interaction) => {
     if (interaction.channel.id !== process.env.PUZZLES_CHANNEL) {
-      await interaction.respond({content: 'This command cannot be used here', ephemeral: true})
+      await interaction.reply({content: 'This command cannot be used here', flags: MessageFlags.Ephemeral})
       return
     }
     if (!interaction.channel.isTextBased) {
-      await interaction.respond({content: 'This must be a text based channel', ephemeral: true})
+      await interaction.reply({content: 'This must be a text based channel', flags: MessageFlags.Ephemeral})
+      return
     }
+    await interaction.deferReply({flags: MessageFlags.Ephemeral})
     const huntName = interaction.options.getString('name')
     try {
-      let thread = await interaction.channel.threads.create({
+      const thread = await interaction.channel.threads.create({
         name: huntName,
         type: ChannelType.PrivateThread,
       })
       await thread.join()
-      await interaction.respond({content: 'Hunt created', ephemeral: true})
+      await interaction.editReply({content: 'Hunt created'})
       let msg = await thread.send({content: 'Creating hunt Docs'})
       const embed = await createDocs(huntName)
       msg = await msg.edit({content: '', embeds: [embed]})
-      msg.pin()
+      try {
+        await msg.pin()
+      } catch (pinError) {
+        logger.error(`Unable to pin hunt message: ${pinError}`)
+      }
       await thread.send({content: `${userMention(process.env.PUZZLES_BOT)} - You're needed in here please!`})
     } catch (error) {
-      interaction.respond({content: `Unable to create docs`})
       logger.error(`Unable to create hunt docs ${error}`)
+      await interaction.editReply({content: 'Unable to create docs'})
     }
   }
 }
 
 const createDocs = async (huntName) => {
-  const [sheet, jamboard] = await createHuntFilesAndGetLink(process.env.DRIVE_PARENT_FOLDER,
+  const sheet = await createHuntFilesAndGetLink(process.env.DRIVE_PARENT_FOLDER,
       process.env.DRIVE_TEMPLATE_DOC, huntName)
   return new EmbedBuilder().
       setTitle('Hunt docs').
-      setDescription(` - [Sheet](${sheet}})\n- [Jamboard](${jamboard})`).
+      setDescription(` - [Sheet](${sheet})`).
       setColor('#a51d2d').
       setFooter({text: 'Good luck!'})
 }

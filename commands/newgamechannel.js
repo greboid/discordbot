@@ -1,5 +1,7 @@
 import {
   ChannelType,
+  InteractionContextType,
+  MessageFlags,
   PermissionFlagsBits,
   PermissionsBitField,
   SlashCommandBuilder,
@@ -15,50 +17,55 @@ export default class NewGameChannel {
           setDescription('The name of the game').
           setRequired(true)).
       setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels).
-      setDMPermission(false)
+      setContexts(InteractionContextType.Guild)
 
   /**
-   * @param client {import('./client.js').BotClient}
+   * @param client {import('../lib/client.js').BotClient}
    * @param interaction {import('discord.js').ChatInputCommandInteraction}
    * @return {Promise<void>}
    */
   execute = async (client, interaction) => {
+    await interaction.deferReply({flags: MessageFlags.Ephemeral})
     try {
-      await interaction.respond({content: 'Creating game channel, bear with me', ephemeral: true})
+      await interaction.editReply({content: 'Creating game channel, bear with me'})
       const gameName = interaction.options.getString('name')
-      let role = await getOrCreateRole(interaction.guild, gameName)
+      const role = await getOrCreateRole(interaction.guild, gameName)
       if (!role) {
-        await interaction.respond(`Can't find or create role, stopping`)
+        await interaction.editReply({content: "Can't find or create role, stopping"})
         return
       }
-      let channel = await interaction.guild.channels.cache.find(
+      const channel = interaction.guild.channels.cache.find(
           channel => channel.name === gameName && channel.parent?.id === process.env.GAMECHAN_CATEGORY)
       if (channel) {
-        await interaction.respond('Channel already exists, stopping')
+        await interaction.editReply({content: 'Channel already exists, stopping'})
         return
       }
-      const roles = [
+      const permissionOverwrites = [
         {
-          id: interaction.guild.roles.everyone,
+          id: interaction.guild.id,
           deny: [PermissionsBitField.Flags.ViewChannel],
         }, {
           id: role.id,
           allow: [PermissionsBitField.Flags.ViewChannel],
         }, {
-          id: interaction.guild.roles.botRoleFor(client.user.id).id,
-          allow: [PermissionsBitField.Flags.ViewChannel | PermissionsBitField.Flags.ManageRoles | PermissionsBitField.Flags.SendMessages],
+          id: client.user.id,
+          allow: [
+            PermissionsBitField.Flags.ViewChannel,
+            PermissionsBitField.Flags.ManageRoles,
+            PermissionsBitField.Flags.SendMessages,
+          ],
         },
       ]
       await interaction.guild.channels.create({
         name: gameName,
         parent: process.env.GAMECHAN_CATEGORY,
         type: ChannelType.GuildText,
-        permissionOverwrites: roles,
+        permissionOverwrites,
       })
-      await interaction.respond('Channel created')
+      await interaction.editReply({content: 'Channel created'})
     } catch (error) {
       logger.error(`Error creating game channel : ${error}`)
-      interaction.respond('There was an error creating the game role and channel')
+      await interaction.editReply({content: 'There was an error creating the game role and channel'})
     }
   }
 }
