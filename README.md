@@ -35,6 +35,7 @@ Discord developer portal with a redirect URI of `<WEB_URL>/callback`.
 | GAMECHAN_CATEGORY        | Games category                           |
 |                          |                                          |
 | **Puzzle Hunt**          | **Description**                          |
+|                          |                                          |
 | PUZZLES_CHANNEL          | Puzzles channel snowflake                |
 | PUZZLES_BOT              | Puzzles bot snowflake                    |
 | DRIVE_PARENT_FOLDER      | Hunts folder ID                          |

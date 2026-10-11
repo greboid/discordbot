@@ -3,6 +3,7 @@ import {
   EmbedBuilder,
   InteractionContextType,
   MessageFlags,
+  PermissionsBitField,
   SlashCommandBuilder,
   userMention,
 } from 'discord.js'
@@ -30,18 +31,19 @@ export default class NewHuntDocs {
    * @return {Promise<void>}
    */
   execute = async (client, interaction) => {
-    if (interaction.channel.id !== process.env.PUZZLES_CHANNEL) {
-      await interaction.reply({content: 'This command cannot be used here', flags: MessageFlags.Ephemeral})
+    const puzzlesChannel = await interaction.guild.channels.fetch(process.env.PUZZLES_CHANNEL).catch(() => null)
+    if (!puzzlesChannel || !puzzlesChannel.isTextBased()) {
+      await interaction.reply({content: 'Unable to find the puzzles channel', flags: MessageFlags.Ephemeral})
       return
     }
-    if (!interaction.channel.isTextBased) {
-      await interaction.reply({content: 'This must be a text based channel', flags: MessageFlags.Ephemeral})
+    if (!puzzlesChannel.permissionsFor(interaction.member).has(PermissionsBitField.Flags.ViewChannel)) {
+      await interaction.reply({content: 'You do not have access to the puzzles channel', flags: MessageFlags.Ephemeral})
       return
     }
     await interaction.deferReply({flags: MessageFlags.Ephemeral})
     const huntName = interaction.options.getString('name')
     try {
-      const thread = await interaction.channel.threads.create({
+      const thread = await puzzlesChannel.threads.create({
         name: huntName,
         type: ChannelType.PrivateThread,
       })
