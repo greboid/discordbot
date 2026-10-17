@@ -23,18 +23,4 @@ jobs:
         with:
           ghcr: 'true'
           ghcr-username: greboid
-  release:
-    if: github.ref_type == 'tag'
-    runs-on: alpine
-    needs:
-      - container
-    steps:
-      - uses: actions/toolkit/git-checkout@master
-      - uses: actions/toolkit/docker-login@master
-        with:
-          audience: u:1:1930e65a-ae65-4334-8fa7-89867f610562
-          ghcr: ${{ secrets.GHCR_TOKEN }}
-      - uses: actions/toolkit/docker-push@master
-        with:
-          ghcr: 'true'
-          ghcr-username: greboid
+
